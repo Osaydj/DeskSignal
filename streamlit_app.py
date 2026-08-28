@@ -62,7 +62,9 @@ def main() -> None:
     )
 
     st.title(APP_TITLE)
-    st.caption(APP_PHASE)
+    st.caption(
+    f"{APP_PHASE} · © 2026 Osayd Jahanzeb. All rights reserved."
+)
     st.write(
         "Upload fictional sales data to calculate KPIs and explore interactive "
         "business trends. Python calculates every statistic; Claude can optionally "

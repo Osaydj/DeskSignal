@@ -382,3 +382,14 @@ AI_FEATURES_ENABLED=false
 This mode displays the complete deterministic dashboard and a clear notice that
 the optional Claude features are disabled. It does not require an Anthropic
 account and cannot spend API credits.
+
+
+## Author
+
+Created by [Osayd Jahanzeb](https://github.com/Osaydj).
+
+## Copyright
+
+Copyright © 2026 Osayd Jahanzeb. All rights reserved.
+
+This source code is provided for portfolio review only. No license is granted to copy, modify, redistribute, sublicense, or sell this software.
