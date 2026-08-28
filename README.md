@@ -10,7 +10,11 @@ The repository runs in **analytics-only mode by default**. CSV validation,
 filters, KPIs, charts, grouped tables, and downloads require no API key and make
 no external AI request. Claude features remain in the codebase but must be
 explicitly enabled by the person operating the application.
+## Live Demo
 
+[Launch the InsightIQ analytics dashboard](https://insightiq-business-analytics.streamlit.app)
+
+The public demo runs in analytics-only mode using fictional sales data. AI features are disabled, and no API key is required.
 ## Version 1 Features
 
 - CSV upload and required-column validation
