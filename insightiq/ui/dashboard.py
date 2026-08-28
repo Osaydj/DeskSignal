@@ -187,9 +187,8 @@ def render_optional_ai(data: pd.DataFrame) -> None:
         "still fully calculated by Python."
     )
 
-
 def render_dashboard(data: pd.DataFrame) -> None:
-    """Render filters, KPIs, charts, and a filtered data preview."""
+    """Render the filtered analytics dashboard in organized tabs."""
 
     filters = render_filters(data)
     filtered_data = filter_sales_data(
@@ -208,50 +207,84 @@ def render_dashboard(data: pd.DataFrame) -> None:
         f"Showing {len(filtered_data):,} rows and "
         f"{filtered_data['transaction_id'].nunique():,} distinct transactions."
     )
-    render_kpis(calculate_kpis(filtered_data))
 
-    st.divider()
-    first_chart_row = st.columns(2)
-    with first_chart_row[0]:
-        st.plotly_chart(
-            revenue_over_time_figure(filtered_data),
-            width="stretch",
-            key="revenue_over_time",
-        )
-    with first_chart_row[1]:
-        st.plotly_chart(
-            profit_over_time_figure(filtered_data),
-            width="stretch",
-            key="profit_over_time",
-        )
-
-    second_chart_row = st.columns(2)
-    with second_chart_row[0]:
-        st.plotly_chart(
-            revenue_by_category_figure(filtered_data),
-            width="stretch",
-            key="revenue_by_category",
-        )
-    with second_chart_row[1]:
-        st.plotly_chart(
-            profit_by_region_figure(filtered_data),
-            width="stretch",
-            key="profit_by_region",
-        )
-
-    st.plotly_chart(
-        top_products_figure(filtered_data),
-        width="stretch",
-        key="top_products",
+    overview_tab, trends_tab, performance_tab, data_tab, ai_tab = st.tabs(
+        [
+            "Overview",
+            "Trends",
+            "Products & Markets",
+            "Data Explorer",
+            "AI Insights",
+        ]
     )
 
-    render_accessible_analytics(filtered_data)
+    with overview_tab:
+        st.subheader("Business overview")
+        st.caption("A summary of the most important results for the selected data.")
+        render_kpis(calculate_kpis(filtered_data))
 
-    with st.expander("View filtered data"):
-        st.dataframe(
-            filtered_data,
-            width="stretch",
-            hide_index=True,
+    with trends_tab:
+        st.subheader("Revenue and profit trends")
+        st.caption("Explore how revenue and profit changed over the selected period.")
+
+        trend_columns = st.columns(2)
+
+        with trend_columns[0]:
+            st.plotly_chart(
+                revenue_over_time_figure(filtered_data),
+                width="stretch",
+                key="revenue_over_time",
+            )
+
+        with trend_columns[1]:
+            st.plotly_chart(
+                profit_over_time_figure(filtered_data),
+                width="stretch",
+                key="profit_over_time",
+            )
+
+    with performance_tab:
+        st.subheader("Products and markets")
+        st.caption(
+            "Compare category revenue, regional profit, and product performance."
         )
 
-    render_optional_ai(filtered_data)
+        performance_columns = st.columns(2)
+
+        with performance_columns[0]:
+            st.plotly_chart(
+                revenue_by_category_figure(filtered_data),
+                width="stretch",
+                key="revenue_by_category",
+            )
+
+        with performance_columns[1]:
+            st.plotly_chart(
+                profit_by_region_figure(filtered_data),
+                width="stretch",
+                key="profit_by_region",
+            )
+
+        st.plotly_chart(
+            top_products_figure(filtered_data),
+            width="stretch",
+            key="top_products",
+        )
+
+    with data_tab:
+        st.subheader("Data explorer")
+        st.caption(
+            "Review accessible analytics tables and inspect the filtered transactions."
+        )
+
+        render_accessible_analytics(filtered_data)
+
+        with st.expander("View filtered data"):
+            st.dataframe(
+                filtered_data,
+                width="stretch",
+                hide_index=True,
+            )
+
+    with ai_tab:
+        render_optional_ai(filtered_data)
