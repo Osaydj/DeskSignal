@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 from insightiq.analytics.anomalies import detect_daily_anomalies
-
+from insightiq.visualization.charts import daily_anomaly_figure
 
 def test_known_revenue_spike_and_drop_are_detected() -> None:
     dates = pd.date_range("2025-01-01", periods=60)
@@ -78,3 +78,22 @@ def test_missing_metric_column_is_rejected() -> None:
 
     with pytest.raises(ValueError, match="Missing required columns"):
         detect_daily_anomalies(data)
+
+
+def test_anomaly_chart_contains_actual_baseline_and_flags() -> None:
+        dates = pd.date_range("2025-01-01", periods=40)
+        revenue = [100.0 + (index % 5) for index in range(40)]
+        revenue[20] = 1_000.0
+        data = pd.DataFrame({"date": dates, "revenue": revenue})
+
+        analysis = detect_daily_anomalies(data)
+        figure = daily_anomaly_figure(analysis, metric="revenue")
+
+        assert len(figure.data) == 3
+        assert [trace.name for trace in figure.data] == [
+            "Actual revenue",
+            "Rolling baseline",
+            "Flagged day",
+        ]
+        assert len(figure.data[2].x) == 1
+        assert figure.layout.title.text == "Daily revenue anomaly review"

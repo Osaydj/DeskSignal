@@ -17,6 +17,7 @@ from insightiq.analytics.performance import (
     region_performance,
 )
 from insightiq.config import ai_features_enabled
+from insightiq.ui.anomaly_analysis import render_anomaly_analysis
 from insightiq.ui.ask_data import render_ask_your_data
 from insightiq.ui.executive_summary import render_ai_executive_summary
 from insightiq.ui.recommendations import render_ai_recommendations
@@ -208,10 +209,18 @@ def render_dashboard(data: pd.DataFrame) -> None:
         f"{filtered_data['transaction_id'].nunique():,} distinct transactions."
     )
 
-    overview_tab, trends_tab, performance_tab, data_tab, ai_tab = st.tabs(
+    (
+        overview_tab,
+        trends_tab,
+        anomalies_tab,
+        performance_tab,
+        data_tab,
+        ai_tab,
+    ) = st.tabs(
         [
             "Overview",
             "Trends",
+            "Anomalies",
             "Products & Markets",
             "Data Explorer",
             "AI Insights",
@@ -242,6 +251,8 @@ def render_dashboard(data: pd.DataFrame) -> None:
                 width="stretch",
                 key="profit_over_time",
             )
+    with anomalies_tab:
+            render_anomaly_analysis(filtered_data)
 
     with performance_tab:
         st.subheader("Products and markets")

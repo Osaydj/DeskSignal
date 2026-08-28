@@ -33,10 +33,11 @@ def test_sample_upload_renders_all_kpis_in_analytics_only_mode() -> None:
 
     assert len(app.exception) == 0
     assert len(app.success) == 1
-    assert len(app.metric) == 8
+    assert len(app.metric) == 10
     expected_tabs = {
         "Overview",
         "Trends",
+        "Anomalies",
         "Products & Markets",
         "Data Explorer",
         "AI Insights",
