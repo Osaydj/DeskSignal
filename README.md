@@ -100,7 +100,7 @@ Uploaded files must also follow these rules:
 Copy the repository's HTTPS URL from GitHub, then run:
 
 ```bash
-git clone YOUR_REPOSITORY_URL
+git clone https://github.com/Osaydj/InsightIQ.git
 cd InsightIQ
 ```
 
