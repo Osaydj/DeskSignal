@@ -14,7 +14,7 @@ load_dotenv(PROJECT_ROOT / ".env", override=False)
 APP_TITLE = "DeskSignal"
 APP_TAGLINE = "AI Business Analytics Assistant"
 APP_ICON = "📊"
-APP_PHASE = "Version 2"
+APP_PHASE = "Version 3"
 CURRENCY_SYMBOL = "$"
 
 

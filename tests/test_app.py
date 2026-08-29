@@ -18,7 +18,7 @@ def test_initial_page_renders_without_exceptions() -> None:
     assert len(app.info) == 1
 
 
-def test_sample_upload_renders_all_kpis_in_analytics_only_mode() -> None:
+def test_sample_upload_renders_dashboard_and_local_ml_tools() -> None:
     project_root = Path(__file__).parents[1]
     app = AppTest.from_file(
         project_root / "streamlit_app.py", default_timeout=20
@@ -33,7 +33,7 @@ def test_sample_upload_renders_all_kpis_in_analytics_only_mode() -> None:
 
     assert len(app.exception) == 0
     assert len(app.success) == 1
-    assert len(app.metric) == 16
+    assert len(app.metric) == 26
     expected_tabs = {
         "Overview",
         "Trends",
@@ -44,6 +44,9 @@ def test_sample_upload_renders_all_kpis_in_analytics_only_mode() -> None:
         "AI Insights",
     }
     assert expected_tabs.issubset({tab.label for tab in app.tabs})
+    assert {"ML Anomalies", "Market Segments", "ML Forecast"}.issubset(
+        {tab.label for tab in app.tabs}
+    )
     assert not any(
         button.label == "Generate AI Executive Summary" for button in app.button
     )
@@ -51,7 +54,10 @@ def test_sample_upload_renders_all_kpis_in_analytics_only_mode() -> None:
         button.label == "Generate AI Recommendations" for button in app.button
     )
     assert len(app.chat_input) == 0
-    assert any("analytics-only mode" in message.value for message in app.info)
+    assert any(
+        "local machine-learning tools" in message.value
+        for message in app.info
+    )
     assert any(
         button.label == "Download filtered CSV"
         for button in app.get("download_button")

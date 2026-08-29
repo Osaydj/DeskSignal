@@ -88,17 +88,22 @@ def main() -> None:
             icon=":material/verified:",
             color="green",
         )
+        st.badge(
+            "Local ML · no API",
+            icon=":material/model_training:",
+            color="violet",
+        )
         if not ai_features_enabled():
             st.badge(
-                "AI disabled by default",
+                "Claude tools optional",
                 icon=":material/lock:",
                 color="gray",
             )
 
     st.write(
         "Upload fictional sales data to explore KPIs, trends, anomalies, forecasts, "
-        "and product performance. Python calculates every displayed statistic. "
-        "Claude features remain optional and operator-controlled."
+        "market segments, and locally trained AI models. Python calculates every "
+        "displayed result; Claude tools remain optional and operator-controlled."
     )
 
     uploaded_file = st.file_uploader(

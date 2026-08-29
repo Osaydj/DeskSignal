@@ -18,6 +18,7 @@ from desksignal.analytics.performance import (
 )
 from desksignal.config import ai_features_enabled
 from desksignal.ui.anomaly_analysis import render_anomaly_analysis
+from desksignal.ui.ai_insights import render_local_ai_insights
 from desksignal.ui.ask_data import render_ask_your_data
 from desksignal.ui.downloads import dataframe_to_safe_csv
 from desksignal.ui.executive_summary import render_ai_executive_summary
@@ -251,11 +252,11 @@ def render_optional_ai(data: pd.DataFrame) -> None:
         return
 
     st.divider()
-    st.header("Optional AI features")
+    st.subheader("Optional Claude tools")
     st.info(
-        "AI Executive Summary, AI Recommendations, and Ask Your Data are disabled "
-        "in analytics-only mode. The dashboard and every displayed statistic are "
-        "still fully calculated by Python."
+        "Claude Executive Summary, Recommendations, and Ask Your Data are not "
+        "configured. The local machine-learning tools above remain fully available "
+        "without an API key."
     )
 
 
@@ -375,4 +376,5 @@ def render_dashboard(data: pd.DataFrame) -> None:
             )
 
     with ai_tab:
+        render_local_ai_insights(filtered_data)
         render_optional_ai(filtered_data)
