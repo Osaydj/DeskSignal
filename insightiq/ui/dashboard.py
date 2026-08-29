@@ -17,8 +17,12 @@ from insightiq.analytics.performance import (
     region_performance,
 )
 from insightiq.config import ai_features_enabled
+from insightiq.ui.anomaly_analysis import render_anomaly_analysis
 from insightiq.ui.ask_data import render_ask_your_data
+from insightiq.ui.downloads import dataframe_to_safe_csv
 from insightiq.ui.executive_summary import render_ai_executive_summary
+from insightiq.ui.forecasting import render_forecasting
+from insightiq.ui.formatting import format_currency
 from insightiq.ui.recommendations import render_ai_recommendations
 from insightiq.visualization.charts import (
     profit_by_region_figure,
@@ -29,6 +33,12 @@ from insightiq.visualization.charts import (
 )
 
 
+FILTER_DATE_KEY = "dashboard_date_range"
+FILTER_CATEGORY_KEY = "dashboard_categories"
+FILTER_REGION_KEY = "dashboard_regions"
+FILTER_SOURCE_KEY = "_dashboard_filter_source"
+
+
 @dataclass(frozen=True)
 class DashboardFilters:
     """Values chosen in the Streamlit filter controls."""
@@ -37,12 +47,6 @@ class DashboardFilters:
     end_date: date
     categories: tuple[str, ...]
     regions: tuple[str, ...]
-
-
-def format_currency(value: float) -> str:
-    """Format a number as US-dollar currency."""
-
-    return f"${value:,.2f}"
 
 
 def resolve_date_range(
@@ -66,6 +70,14 @@ def resolve_date_range(
     )
 
 
+def _reset_filter_widgets(minimum_date: date, maximum_date: date) -> None:
+    """Restore dashboard filter widgets to the full dataset scope."""
+
+    st.session_state[FILTER_DATE_KEY] = (minimum_date, maximum_date)
+    st.session_state[FILTER_CATEGORY_KEY] = []
+    st.session_state[FILTER_REGION_KEY] = []
+
+
 def render_filters(data: pd.DataFrame) -> DashboardFilters:
     """Render sidebar controls and return their selected values."""
 
@@ -73,14 +85,38 @@ def render_filters(data: pd.DataFrame) -> DashboardFilters:
     maximum_date = data["date"].max().date()
     available_categories = sorted(data["category"].unique().tolist())
     available_regions = sorted(data["region"].unique().tolist())
+    source_signature = (
+        minimum_date,
+        maximum_date,
+        tuple(available_categories),
+        tuple(available_regions),
+    )
+
+    if st.session_state.get(FILTER_SOURCE_KEY) != source_signature:
+        st.session_state[FILTER_SOURCE_KEY] = source_signature
+        _reset_filter_widgets(minimum_date, maximum_date)
 
     with st.sidebar:
+        st.subheader("Dataset")
+        st.badge(
+            "Validated sales data",
+            icon=":material/verified:",
+            color="green",
+        )
+        st.caption(
+            f"{len(data):,} rows · "
+            f"{data['transaction_id'].nunique():,} transactions"
+        )
+        st.caption(
+            f"{minimum_date:%b %d, %Y} — {maximum_date:%b %d, %Y}"
+        )
+        st.divider()
         st.header("Filters")
         selected_dates = st.date_input(
             "Date range",
-            value=(minimum_date, maximum_date),
             min_value=minimum_date,
             max_value=maximum_date,
+            key=FILTER_DATE_KEY,
         )
 
         start_date, end_date = resolve_date_range(
@@ -93,11 +129,21 @@ def render_filters(data: pd.DataFrame) -> DashboardFilters:
             "Categories",
             options=available_categories,
             help="Leave blank to include every category.",
+            key=FILTER_CATEGORY_KEY,
         )
         selected_regions = st.multiselect(
             "Regions",
             options=available_regions,
             help="Leave blank to include every region.",
+            key=FILTER_REGION_KEY,
+        )
+
+        st.button(
+            "Reset filters",
+            icon=":material/restart_alt:",
+            width="stretch",
+            on_click=_reset_filter_widgets,
+            args=(minimum_date, maximum_date),
         )
 
         st.caption("Filters update every KPI and chart.")
@@ -114,27 +160,51 @@ def render_kpis(kpis: BusinessKPIs) -> None:
     """Render the eight primary business metrics."""
 
     first_row = st.columns(4)
-    first_row[0].metric("Total revenue", format_currency(kpis.total_revenue))
-    first_row[1].metric("Total profit", format_currency(kpis.total_profit))
-    first_row[2].metric("Profit margin", f"{kpis.profit_margin:.1%}")
-    first_row[3].metric("Transactions", f"{kpis.total_transactions:,}")
+    first_row[0].metric(
+        "Total revenue",
+        format_currency(kpis.total_revenue),
+        border=True,
+    )
+    first_row[1].metric(
+        "Total profit",
+        format_currency(kpis.total_profit),
+        border=True,
+    )
+    first_row[2].metric(
+        "Profit margin",
+        f"{kpis.profit_margin:.1%}",
+        border=True,
+    )
+    first_row[3].metric(
+        "Transactions",
+        f"{kpis.total_transactions:,}",
+        border=True,
+    )
 
     second_row = st.columns(4)
-    second_row[0].metric("Units sold", f"{kpis.total_units_sold:,}")
+    second_row[0].metric(
+        "Units sold",
+        f"{kpis.total_units_sold:,}",
+        border=True,
+    )
     second_row[1].metric(
-        "Average order value", format_currency(kpis.average_order_value)
+        "Average order value",
+        format_currency(kpis.average_order_value),
+        border=True,
     )
     second_row[2].metric(
         "Best product",
         kpis.best_product,
         delta=f"{format_currency(kpis.best_product_revenue)} revenue",
         delta_color="off",
+        border=True,
     )
     second_row[3].metric(
         "Best region",
         kpis.best_region,
         delta=f"{format_currency(kpis.best_region_revenue)} revenue",
         delta_color="off",
+        border=True,
     )
 
 
@@ -164,9 +234,10 @@ def render_accessible_analytics(data: pd.DataFrame) -> None:
 
         st.download_button(
             "Download filtered CSV",
-            data=data.to_csv(index=False).encode("utf-8"),
+            data=dataframe_to_safe_csv(data),
             file_name="insightiq_filtered_sales.csv",
             mime="text/csv",
+            icon=":material/download:",
         )
 
 
@@ -189,7 +260,7 @@ def render_optional_ai(data: pd.DataFrame) -> None:
 
 
 def render_dashboard(data: pd.DataFrame) -> None:
-    """Render filters, KPIs, charts, and a filtered data preview."""
+    """Render the filtered analytics dashboard in organized tabs."""
 
     filters = render_filters(data)
     filtered_data = filter_sales_data(
@@ -208,50 +279,100 @@ def render_dashboard(data: pd.DataFrame) -> None:
         f"Showing {len(filtered_data):,} rows and "
         f"{filtered_data['transaction_id'].nunique():,} distinct transactions."
     )
-    render_kpis(calculate_kpis(filtered_data))
 
-    st.divider()
-    first_chart_row = st.columns(2)
-    with first_chart_row[0]:
-        st.plotly_chart(
-            revenue_over_time_figure(filtered_data),
-            width="stretch",
-            key="revenue_over_time",
-        )
-    with first_chart_row[1]:
-        st.plotly_chart(
-            profit_over_time_figure(filtered_data),
-            width="stretch",
-            key="profit_over_time",
-        )
-
-    second_chart_row = st.columns(2)
-    with second_chart_row[0]:
-        st.plotly_chart(
-            revenue_by_category_figure(filtered_data),
-            width="stretch",
-            key="revenue_by_category",
-        )
-    with second_chart_row[1]:
-        st.plotly_chart(
-            profit_by_region_figure(filtered_data),
-            width="stretch",
-            key="profit_by_region",
-        )
-
-    st.plotly_chart(
-        top_products_figure(filtered_data),
-        width="stretch",
-        key="top_products",
+    (
+        overview_tab,
+        trends_tab,
+        anomalies_tab,
+        forecasting_tab,
+        performance_tab,
+        data_tab,
+        ai_tab,
+    ) = st.tabs(
+        [
+            "Overview",
+            "Trends",
+            "Anomalies",
+            "Forecasting",
+            "Products & Markets",
+            "Data Explorer",
+            "AI Insights",
+        ]
     )
 
-    render_accessible_analytics(filtered_data)
+    with overview_tab:
+        st.subheader("Business overview")
+        st.caption("A summary of the most important results for the selected data.")
+        render_kpis(calculate_kpis(filtered_data))
 
-    with st.expander("View filtered data"):
-        st.dataframe(
-            filtered_data,
-            width="stretch",
-            hide_index=True,
+    with trends_tab:
+        st.subheader("Revenue and profit trends")
+        st.caption("Explore how revenue and profit changed over the selected period.")
+
+        trend_columns = st.columns(2)
+
+        with trend_columns[0]:
+            st.plotly_chart(
+                revenue_over_time_figure(filtered_data),
+                width="stretch",
+                key="revenue_over_time",
+            )
+
+        with trend_columns[1]:
+            st.plotly_chart(
+                profit_over_time_figure(filtered_data),
+                width="stretch",
+                key="profit_over_time",
+            )
+
+    with anomalies_tab:
+        render_anomaly_analysis(filtered_data)
+
+    with forecasting_tab:
+        render_forecasting(filtered_data)
+
+    with performance_tab:
+        st.subheader("Products and markets")
+        st.caption(
+            "Compare category revenue, regional profit, and product performance."
         )
 
-    render_optional_ai(filtered_data)
+        performance_columns = st.columns(2)
+
+        with performance_columns[0]:
+            st.plotly_chart(
+                revenue_by_category_figure(filtered_data),
+                width="stretch",
+                key="revenue_by_category",
+            )
+
+        with performance_columns[1]:
+            st.plotly_chart(
+                profit_by_region_figure(filtered_data),
+                width="stretch",
+                key="profit_by_region",
+            )
+
+        st.plotly_chart(
+            top_products_figure(filtered_data),
+            width="stretch",
+            key="top_products",
+        )
+
+    with data_tab:
+        st.subheader("Data explorer")
+        st.caption(
+            "Review accessible analytics tables and inspect the filtered transactions."
+        )
+
+        render_accessible_analytics(filtered_data)
+
+        with st.expander("View filtered data"):
+            st.dataframe(
+                filtered_data,
+                width="stretch",
+                hide_index=True,
+            )
+
+    with ai_tab:
+        render_optional_ai(filtered_data)

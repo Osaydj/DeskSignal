@@ -151,3 +151,93 @@ def top_products_figure(data: pd.DataFrame, top_n: int = 10) -> go.Figure:
     )
     figure.update_yaxes(title=None)
     return _style_figure(figure, height=440, currency_axis="x")
+
+
+def daily_anomaly_figure(
+    anomaly_data: pd.DataFrame,
+    *,
+    metric: str,
+) -> go.Figure:
+    """Plot daily actuals, their baseline, and detected anomalies."""
+
+    display_name = metric.replace("_", " ").title()
+    actual_color = REVENUE_COLOR if metric == "revenue" else PROFIT_COLOR
+    anomalies = anomaly_data.loc[anomaly_data["is_anomaly"]].copy()
+    marker_colors = [
+        "#D97706" if direction == "Spike" else NEGATIVE_COLOR
+        for direction in anomalies["direction"]
+    ]
+
+    figure = go.Figure()
+    figure.add_trace(
+        go.Scatter(
+            x=anomaly_data["date"],
+            y=anomaly_data["actual"],
+            mode="lines",
+            name=f"Actual {display_name.lower()}",
+            line={"color": actual_color, "width": 2.5},
+            hovertemplate=(
+                "%{x|%b %d, %Y}<br>"
+                "Actual: $%{y:,.2f}<extra></extra>"
+            ),
+        )
+    )
+    figure.add_trace(
+        go.Scatter(
+            x=anomaly_data["date"],
+            y=anomaly_data["baseline"],
+            mode="lines",
+            name="Rolling baseline",
+            line={
+                "color": "#6B7280",
+                "width": 2,
+                "dash": "dash",
+            },
+            hovertemplate=(
+                "%{x|%b %d, %Y}<br>"
+                "Baseline: $%{y:,.2f}<extra></extra>"
+            ),
+        )
+    )
+    figure.add_trace(
+        go.Scatter(
+            x=anomalies["date"],
+            y=anomalies["actual"],
+            mode="markers",
+            name="Flagged day",
+            marker={
+                "color": marker_colors,
+                "size": 11,
+                "symbol": "diamond",
+                "line": {
+                    "color": "white",
+                    "width": 1,
+                },
+            },
+            customdata=anomalies[
+                [
+                    "baseline",
+                    "difference",
+                    "percent_difference",
+                    "direction",
+                    "anomaly_score",
+                ]
+            ],
+            hovertemplate=(
+                "%{x|%b %d, %Y}<br>"
+                "Actual: $%{y:,.2f}<br>"
+                "Baseline: $%{customdata[0]:,.2f}<br>"
+                "Difference: $%{customdata[1]:+,.2f}<br>"
+                "Change: %{customdata[2]:+.1f}%<br>"
+                "Direction: %{customdata[3]}<br>"
+                "Score: %{customdata[4]:.2f}<extra></extra>"
+            ),
+        )
+    )
+    figure.update_layout(
+        title=f"Daily {display_name.lower()} anomaly review",
+        xaxis_title="Date",
+        yaxis_title=display_name,
+        hovermode="x unified",
+    )
+    return _style_figure(figure, height=440)

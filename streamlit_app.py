@@ -9,7 +9,13 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from insightiq.config import APP_ICON, APP_PHASE, APP_TITLE
+from insightiq.config import (
+    APP_ICON,
+    APP_PHASE,
+    APP_TAGLINE,
+    APP_TITLE,
+    ai_features_enabled,
+)
 from insightiq.data.loader import load_sales_csv
 from insightiq.errors import DataValidationError
 from insightiq.ui.dashboard import render_dashboard
@@ -56,20 +62,43 @@ def main() -> None:
     """Render the analytics application and optional AI summary."""
 
     st.set_page_config(
-        page_title="InsightIQ",
+        page_title=f"{APP_TITLE} | Business Analytics",
         page_icon=APP_ICON,
         layout="wide",
+        initial_sidebar_state="expanded",
+        menu_items={
+            "About": (
+                "InsightIQ is a portfolio and educational business analytics "
+                "application created by Osayd Jahanzeb."
+            ),
+        },
     )
 
     st.title(APP_TITLE)
-    st.caption(
-    f"{APP_PHASE} · © 2026 Osayd Jahanzeb. All rights reserved."
-)
+    st.caption(f"{APP_TAGLINE} · © 2026 Osayd Jahanzeb. All rights reserved.")
+
+    with st.container(horizontal=True, gap="small"):
+        st.badge(
+            APP_PHASE,
+            icon=":material/analytics:",
+            color="primary",
+        )
+        st.badge(
+            "Python-calculated results",
+            icon=":material/verified:",
+            color="green",
+        )
+        if not ai_features_enabled():
+            st.badge(
+                "AI disabled by default",
+                icon=":material/lock:",
+                color="gray",
+            )
+
     st.write(
-        "Upload fictional sales data to calculate KPIs and explore interactive "
-        "business trends. Python calculates every statistic; Claude can optionally "
-        "interpret those results and retrieve relevant sections from a fictional "
-        "company knowledge base to propose cautious investigation ideas."
+        "Upload fictional sales data to explore KPIs, trends, anomalies, forecasts, "
+        "and product performance. Python calculates every displayed statistic. "
+        "Claude features remain optional and operator-controlled."
     )
 
     uploaded_file = st.file_uploader(
