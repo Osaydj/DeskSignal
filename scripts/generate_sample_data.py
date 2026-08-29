@@ -1,4 +1,4 @@
-"""Generate a realistic, entirely fictional sales dataset for InsightIQ.
+"""Generate a realistic, entirely fictional sales dataset for DeskSignal.
 
 The generator intentionally creates patterns that an analytics dashboard can
 discover, including seasonality, regional differences, customer-type behavior,
@@ -514,7 +514,7 @@ def parse_args() -> argparse.Namespace:
     """Read optional command-line settings."""
 
     parser = argparse.ArgumentParser(
-        description="Generate fictional sales data for InsightIQ."
+        description="Generate fictional sales data for DeskSignal."
     )
     parser.add_argument("--rows", type=int, default=DEFAULT_ROW_COUNT)
     parser.add_argument("--year", type=int, default=DEFAULT_YEAR)

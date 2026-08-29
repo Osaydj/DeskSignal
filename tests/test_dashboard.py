@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from insightiq.ui.dashboard import resolve_date_range
+from desksignal.ui.dashboard import resolve_date_range
 
 
 START = date(2025, 1, 1)

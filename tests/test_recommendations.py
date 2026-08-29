@@ -7,12 +7,12 @@ from typing import Any
 
 import pytest
 
-from insightiq.ai.recommendation_models import (
+from desksignal.ai.recommendation_models import (
     AIRecommendations,
     ManagementRecommendation,
 )
-from insightiq.ai.recommendations import generate_ai_recommendations
-from insightiq.errors import MalformedAIResponseError
+from desksignal.ai.recommendations import generate_ai_recommendations
+from desksignal.errors import MalformedAIResponseError
 
 
 class FakeMessages:

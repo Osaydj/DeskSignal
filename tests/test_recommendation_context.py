@@ -7,14 +7,14 @@ from pathlib import Path
 
 import pandas as pd
 
-from insightiq.ai.recommendation_context import (
+from desksignal.ai.recommendation_context import (
     MAX_RETRIEVED_SECTIONS,
     build_recommendation_context,
     recommendation_analytics_evidence,
     recommendation_context_fingerprint,
     recommendation_document_evidence,
 )
-from insightiq.data.validation import validate_sales_data
+from desksignal.data.validation import validate_sales_data
 
 
 PROJECT_ROOT = Path(__file__).parents[1]

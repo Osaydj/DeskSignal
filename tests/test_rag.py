@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from insightiq.rag.loader import MAX_CHUNK_CHARACTERS, load_knowledge_base
-from insightiq.rag.retriever import knowledge_base_metadata, search_knowledge_base
+from desksignal.rag.loader import MAX_CHUNK_CHARACTERS, load_knowledge_base
+from desksignal.rag.retriever import knowledge_base_metadata, search_knowledge_base
 
 
 def test_loader_chunks_only_approved_fictional_documents() -> None:

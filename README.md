@@ -1,6 +1,6 @@
-# InsightIQ — AI Business Analytics Assistant
+# DeskSignal — AI Business Analytics Assistant
 
-InsightIQ is a portfolio and educational business analytics application built
+DeskSignal is a portfolio and educational business analytics application built
 with Python, Streamlit, Pandas, Plotly, and the Anthropic Python SDK. Python
 calculates every statistic. Claude optionally explains those calculated results
 and can retrieve relevant sections from a small, entirely fictional company
@@ -12,7 +12,7 @@ no external AI request. Claude features remain in the codebase but must be
 explicitly enabled by the person operating the application.
 ## Live Demo
 
-[Launch the InsightIQ analytics dashboard](https://insightiq-business-analytics.streamlit.app)
+[Launch the DeskSignal analytics dashboard](https://desksignal-business-analytics.streamlit.app)
 
 The public demo runs in analytics-only mode using fictional sales data. AI features are disabled, and no API key is required.
 ## Version 2 — Released
@@ -77,9 +77,9 @@ An anomaly flag is a lead for investigation, not proof of a business problem.
 ## Project Structure
 
 ```text
-InsightIQ/
+DeskSignal/
 ├── knowledge_base/      # Fictional policy, product, and strategy Markdown
-├── insightiq/
+├── desksignal/
 │   ├── analytics/       # KPI, filtering, and aggregation functions
 │   ├── ai/              # Claude client, prompt, context, and response models
 │   ├── data/            # CSV loading, schema, and validation
@@ -133,8 +133,8 @@ Uploaded files must also follow these rules:
 Copy the repository's HTTPS URL from GitHub, then run:
 
 ```bash
-git clone https://github.com/Osaydj/InsightIQ.git
-cd InsightIQ
+git clone https://github.com/Osaydj/DeskSignal.git
+cd DeskSignal
 ```
 
 Alternatively, download the repository ZIP from GitHub, extract it, and open
@@ -250,7 +250,7 @@ least 20%. It is an investigation cue, not a statistical anomaly detector.
 
 ## How Ask Your Data and RAG Work
 
-InsightIQ does not send the entire CSV to Claude. It sends the user's question,
+DeskSignal does not send the entire CSV to Claude. It sends the user's question,
 the current filtered date range, a compact list of available labels, basic
 knowledge-base metadata, and eight strict tool definitions:
 
@@ -319,7 +319,7 @@ embeddings and a vector store without changing the tool-use or evidence model.
 This feature is decision support, not an automatic decision maker:
 
 1. Python builds the same deterministic KPI, trend, product, category, and
-   regional evidence used elsewhere in InsightIQ.
+   regional evidence used elsewhere in DeskSignal.
 2. Python creates focused retrieval queries from measured strongest, weakest,
    margin, region, and unusual-change patterns.
 3. Local TF-IDF retrieval selects at most five relevant company sections. It
@@ -348,7 +348,7 @@ there is no `eval`, `exec`, generated SQL, shell access, arbitrary file access,
 or code-execution tool. Final evidence IDs must exist, and numeric text is
 rejected when it does not appear in the cited analytics or document evidence.
 
-For questions such as "Why did revenue decline?", InsightIQ can identify measured
+For questions such as "Why did revenue decline?", DeskSignal can identify measured
 contributors by product, region, or category. It cannot prove an external cause,
 so the answer must state that limitation.
 

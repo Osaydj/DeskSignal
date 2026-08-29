@@ -5,20 +5,20 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from insightiq.analytics.kpis import calculate_kpis
-from insightiq.analytics.executive import (
+from desksignal.analytics.kpis import calculate_kpis
+from desksignal.analytics.executive import (
     monthly_performance,
     performance_by_dimension,
     unusual_monthly_changes,
 )
-from insightiq.analytics.performance import (
+from desksignal.analytics.performance import (
     category_performance,
     daily_performance,
     filter_sales_data,
     product_performance,
     region_performance,
 )
-from insightiq.data.validation import validate_sales_data
+from desksignal.data.validation import validate_sales_data
 
 
 def test_kpis_match_known_answers(valid_sales_data: pd.DataFrame) -> None:

@@ -6,12 +6,12 @@ import json
 
 import pandas as pd
 
-from insightiq.ai.context import (
+from desksignal.ai.context import (
     build_analysis_context,
     context_fingerprint,
     evidence_lookup,
 )
-from insightiq.data.validation import validate_sales_data
+from desksignal.data.validation import validate_sales_data
 
 
 def test_analysis_context_contains_aggregates_not_raw_rows(

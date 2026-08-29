@@ -7,12 +7,12 @@ import json
 import pandas as pd
 import pytest
 
-from insightiq.ai.tool_dispatcher import (
+from desksignal.ai.tool_dispatcher import (
     execute_tool,
     get_tool_definitions,
 )
-from insightiq.data.validation import validate_sales_data
-from insightiq.errors import ToolInputError
+from desksignal.data.validation import validate_sales_data
+from desksignal.errors import ToolInputError
 
 
 EMPTY_FILTERS = {

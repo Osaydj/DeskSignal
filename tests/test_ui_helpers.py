@@ -6,8 +6,8 @@ from io import StringIO
 
 import pandas as pd
 
-from insightiq.ui.downloads import dataframe_to_safe_csv
-from insightiq.ui.formatting import format_currency
+from desksignal.ui.downloads import dataframe_to_safe_csv
+from desksignal.ui.formatting import format_currency
 
 
 def test_currency_sign_appears_before_symbol() -> None:

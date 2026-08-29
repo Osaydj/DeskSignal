@@ -6,7 +6,7 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 import streamlit_app
-from insightiq.errors import DataValidationError
+from desksignal.errors import DataValidationError
 
 
 def test_initial_page_renders_without_exceptions() -> None:
@@ -14,7 +14,7 @@ def test_initial_page_renders_without_exceptions() -> None:
     app = AppTest.from_file(app_path, default_timeout=10).run()
 
     assert len(app.exception) == 0
-    assert app.title[0].value.startswith("InsightIQ")
+    assert app.title[0].value.startswith("DeskSignal")
     assert len(app.info) == 1
 
 
