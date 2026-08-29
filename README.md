@@ -15,6 +15,34 @@ explicitly enabled by the person operating the application.
 [Launch the InsightIQ analytics dashboard](https://insightiq-business-analytics.streamlit.app)
 
 The public demo runs in analytics-only mode using fictional sales data. AI features are disabled, and no API key is required.
+## Version 2 — In Development
+
+Version 2 is currently being developed and tested on the `version-2` branch. The public demo remains on Version 1 until Version 2 is complete and approved for deployment.
+
+### New Features
+
+- Seven-section dashboard navigation: Overview, Trends, Anomalies, Forecasting, Products & Markets, Data Explorer, and AI Insights
+- Deterministic daily revenue and profit anomaly detection
+- Rolling historical baselines and anomaly scores
+- Interactive anomaly charts with flagged spikes and drops
+- Detailed anomaly investigation tables
+- Deterministic daily revenue and profit forecasting
+- Forecast horizons of 7, 14, 30, 60, or 90 days
+- Historical lookback windows of 30, 60, 90, 180, or 365 days
+- Day-of-week patterns, recent linear trends, and statistical uncertainty ranges
+- Warnings when the forecast horizon exceeds the historical lookback
+- Forecast tables and CSV downloads
+- 79 automated tests
+
+The anomaly detection and forecasting features are calculated entirely with Python. They do not use an AI model or make an external API request.
+
+### Forecasting Limitations
+
+Forecasts are estimates based on recent historical patterns, not guaranteed future results. Outliers, limited history, seasonal changes, and unexpected business events can affect accuracy. A short historical lookback may overreact to temporary changes, especially when forecasting a longer period.
+
+Negative profit forecasts are possible when the recent profit trend is declining. Revenue forecasts are prevented from falling below zero. Forecasts should be used as decision-support signals rather than confirmed business outcomes.
+
+An anomaly flag is a lead for investigation, not proof of a business problem.
 ## Version 1 Features
 
 - CSV upload and required-column validation
