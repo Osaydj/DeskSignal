@@ -5,8 +5,8 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from insightiq.analytics.forecasting import create_daily_forecast
-from insightiq.visualization.forecasting import daily_forecast_figure
+from desksignal.analytics.forecasting import create_daily_forecast
+from desksignal.visualization.forecasting import daily_forecast_figure
 
 def _sample_history(days: int = 120) -> pd.DataFrame:
     """Create predictable fictional daily results for testing."""

@@ -10,9 +10,9 @@ from typing import Any
 import pandas as pd
 import pytest
 
-from insightiq.ai.ask_data import ask_your_data
-from insightiq.data.validation import validate_sales_data
-from insightiq.errors import MalformedAIResponseError
+from desksignal.ai.ask_data import ask_your_data
+from desksignal.data.validation import validate_sales_data
+from desksignal.errors import MalformedAIResponseError
 
 
 class FakeMessages:

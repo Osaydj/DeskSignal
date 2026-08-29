@@ -9,9 +9,9 @@ import anthropic
 import httpx2
 import pytest
 
-from insightiq.ai.client import generate_executive_summary
-from insightiq.ai.models import EvidenceBasedInsight, ExecutiveSummary
-from insightiq.errors import (
+from desksignal.ai.client import generate_executive_summary
+from desksignal.ai.models import EvidenceBasedInsight, ExecutiveSummary
+from desksignal.errors import (
     AIServiceError,
     MalformedAIResponseError,
     MissingAPIKeyError,

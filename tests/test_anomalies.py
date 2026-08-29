@@ -5,8 +5,8 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from insightiq.analytics.anomalies import detect_daily_anomalies
-from insightiq.visualization.charts import daily_anomaly_figure
+from desksignal.analytics.anomalies import detect_daily_anomalies
+from desksignal.visualization.charts import daily_anomaly_figure
 
 def test_known_revenue_spike_and_drop_are_detected() -> None:
     dates = pd.date_range("2025-01-01", periods=60)

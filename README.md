@@ -1,20 +1,43 @@
-# InsightIQ — AI Business Analytics Assistant
+# DeskSignal — AI Business Analytics Assistant
 
-InsightIQ is a portfolio and educational business analytics application built
-with Python, Streamlit, Pandas, Plotly, and the Anthropic Python SDK. Python
-calculates every statistic. Claude optionally explains those calculated results
-and can retrieve relevant sections from a small, entirely fictional company
-knowledge base.
+DeskSignal is a portfolio and educational business analytics application built
+with Python, Streamlit, Pandas, Plotly, scikit-learn, and the Anthropic Python
+SDK. Python calculates every result. Local machine-learning models find unusual
+days, group product-market segments, and forecast sales without an API key.
+Claude can optionally explain calculated results and retrieve relevant sections
+from a small, entirely fictional company knowledge base.
 
-The repository runs in **analytics-only mode by default**. CSV validation,
-filters, KPIs, charts, grouped tables, and downloads require no API key and make
-no external AI request. Claude features remain in the codebase but must be
-explicitly enabled by the person operating the application.
+The repository runs in **local analytics and ML mode by default**. CSV
+validation, filters, KPIs, charts, grouped tables, downloads, and local model
+training make no external AI request. Claude tools remain in the codebase but
+must be explicitly enabled by the person operating the application.
 ## Live Demo
 
-[Launch the InsightIQ analytics dashboard](https://insightiq-business-analytics.streamlit.app)
+[Launch the DeskSignal analytics dashboard](https://desksignal-business-analytics.streamlit.app)
 
-The public demo runs in analytics-only mode using fictional sales data. AI features are disabled, and no API key is required.
+The public demo uses fictional sales data. Its local ML tools require no API key;
+optional Claude tools remain unconfigured.
+
+## Version 3 — Local AI
+
+Version 3 adds practical, explainable machine learning inside the existing AI
+Insights workspace:
+
+- Multivariate Isolation Forest anomaly detection
+- K-Means product-market segmentation with readable cluster profiles
+- Random Forest revenue and profit forecasting
+- Chronological forecast validation with MAE and WAPE
+- Comparison against a transparent seven-day baseline
+- Model feature-importance and validation-error explanations
+- Filter-aware model training and spreadsheet-safe result downloads
+- Deterministic random seeds and cached model runs
+- No API key, paid model, or external data transfer for local ML
+- 88 automated tests
+
+These models are decision-support tools. An anomaly is an investigation lead,
+clusters describe similarity rather than causation, and forecasts are estimates—not
+guaranteed outcomes.
+
 ## Version 2 — Released
 
 Version 2 is complete, tested, and deployed from the `main` branch. The public demo now runs Version 2 in analytics-only mode. AI features remain disabled by default and require explicit operator configuration.
@@ -77,10 +100,10 @@ An anomaly flag is a lead for investigation, not proof of a business problem.
 ## Project Structure
 
 ```text
-InsightIQ/
+DeskSignal/
 ├── knowledge_base/      # Fictional policy, product, and strategy Markdown
-├── insightiq/
-│   ├── analytics/       # KPI, filtering, and aggregation functions
+├── desksignal/
+│   ├── analytics/       # KPI, deterministic analytics, and local ML models
 │   ├── ai/              # Claude client, prompt, context, and response models
 │   ├── data/            # CSV loading, schema, and validation
 │   ├── rag/             # Document loading, chunking, and local retrieval
@@ -133,8 +156,8 @@ Uploaded files must also follow these rules:
 Copy the repository's HTTPS URL from GitHub, then run:
 
 ```bash
-git clone https://github.com/Osaydj/InsightIQ.git
-cd InsightIQ
+git clone https://github.com/Osaydj/DeskSignal.git
+cd DeskSignal
 ```
 
 Alternatively, download the repository ZIP from GitHub, extract it, and open
@@ -184,10 +207,10 @@ python -m streamlit run streamlit_app.py
 
 Open `http://localhost:8501` if the browser does not open automatically.
 
-## Configure the Claude API Securely
+## Optional Claude Configuration
 
-AI is optional. The dashboard, deterministic charts, document loading, and local
-retrieval work without an API key. To enable the Executive Summary,
+Claude is optional. The dashboard, deterministic charts, local ML models,
+document loading, and local retrieval work without an API key. To enable the Executive Summary,
 Recommendations, and Ask Your Data features, copy the safe example file:
 
 ```powershell
@@ -250,7 +273,7 @@ least 20%. It is an investigation cue, not a statistical anomaly detector.
 
 ## How Ask Your Data and RAG Work
 
-InsightIQ does not send the entire CSV to Claude. It sends the user's question,
+DeskSignal does not send the entire CSV to Claude. It sends the user's question,
 the current filtered date range, a compact list of available labels, basic
 knowledge-base metadata, and eight strict tool definitions:
 
@@ -319,7 +342,7 @@ embeddings and a vector store without changing the tool-use or evidence model.
 This feature is decision support, not an automatic decision maker:
 
 1. Python builds the same deterministic KPI, trend, product, category, and
-   regional evidence used elsewhere in InsightIQ.
+   regional evidence used elsewhere in DeskSignal.
 2. Python creates focused retrieval queries from measured strongest, weakest,
    margin, region, and unusual-change patterns.
 3. Local TF-IDF retrieval selects at most five relevant company sections. It
@@ -348,7 +371,7 @@ there is no `eval`, `exec`, generated SQL, shell access, arbitrary file access,
 or code-execution tool. Final evidence IDs must exist, and numeric text is
 rejected when it does not appear in the cited analytics or document evidence.
 
-For questions such as "Why did revenue decline?", InsightIQ can identify measured
+For questions such as "Why did revenue decline?", DeskSignal can identify measured
 contributors by product, region, or category. It cannot prove an external cause,
 so the answer must state that limitation.
 
@@ -386,9 +409,8 @@ python -m pytest
 The GitHub Actions workflow runs the same tests, bytecode compilation, and
 dependency consistency check for every push and pull request.
 
-No new package is required for RAG. The TF-IDF and cosine-similarity code uses
-Python's standard library; the existing packages in `requirements.txt` are
-unchanged.
+The local ML tools use scikit-learn. RAG's TF-IDF and cosine-similarity code uses
+Python's standard library and does not require an embedding service.
 
 ## Generate Fresh Fictional Data
 
@@ -406,15 +428,15 @@ keys, private company data, or uploaded customer data to GitHub.
 
 ## Portfolio Deployment Mode
 
-Keep this setting for a free public analytics demonstration:
+Keep this setting for a free public analytics and local-ML demonstration:
 
 ```dotenv
 AI_FEATURES_ENABLED=false
 ```
 
-This mode displays the complete deterministic dashboard and a clear notice that
-the optional Claude features are disabled. It does not require an Anthropic
-account and cannot spend API credits.
+This mode displays the complete deterministic dashboard and all three local ML
+tools, plus a clear notice that the optional Claude tools are not configured. It
+does not require an Anthropic account and cannot spend API credits.
 
 
 ## Author

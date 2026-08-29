@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pandas as pd
 
-from insightiq.data.validation import validate_sales_data
-from insightiq.visualization.charts import (
+from desksignal.data.validation import validate_sales_data
+from desksignal.visualization.charts import (
     profit_by_region_figure,
     profit_over_time_figure,
     revenue_by_category_figure,

@@ -7,10 +7,10 @@ from io import StringIO
 import pandas as pd
 import pytest
 
-from insightiq.data.loader import load_sales_csv
-from insightiq.data import validation
-from insightiq.data.validation import validate_sales_data
-from insightiq.errors import DataValidationError
+from desksignal.data.loader import load_sales_csv
+from desksignal.data import validation
+from desksignal.data.validation import validate_sales_data
+from desksignal.errors import DataValidationError
 
 
 def test_valid_data_is_cleaned(valid_sales_data: pd.DataFrame) -> None:

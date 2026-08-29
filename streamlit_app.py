@@ -1,4 +1,4 @@
-"""Streamlit entry point for the InsightIQ analytics dashboard."""
+"""Streamlit entry point for the DeskSignal analytics dashboard."""
 
 from __future__ import annotations
 
@@ -9,16 +9,16 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from insightiq.config import (
+from desksignal.config import (
     APP_ICON,
     APP_PHASE,
     APP_TAGLINE,
     APP_TITLE,
     ai_features_enabled,
 )
-from insightiq.data.loader import load_sales_csv
-from insightiq.errors import DataValidationError
-from insightiq.ui.dashboard import render_dashboard
+from desksignal.data.loader import load_sales_csv
+from desksignal.errors import DataValidationError
+from desksignal.ui.dashboard import render_dashboard
 
 
 LOGGER = logging.getLogger(__name__)
@@ -68,7 +68,7 @@ def main() -> None:
         initial_sidebar_state="expanded",
         menu_items={
             "About": (
-                "InsightIQ is a portfolio and educational business analytics "
+                "DeskSignal is a portfolio and educational business analytics "
                 "application created by Osayd Jahanzeb."
             ),
         },
@@ -88,24 +88,29 @@ def main() -> None:
             icon=":material/verified:",
             color="green",
         )
+        st.badge(
+            "Local ML · no API",
+            icon=":material/model_training:",
+            color="violet",
+        )
         if not ai_features_enabled():
             st.badge(
-                "AI disabled by default",
+                "Claude tools optional",
                 icon=":material/lock:",
                 color="gray",
             )
 
     st.write(
         "Upload fictional sales data to explore KPIs, trends, anomalies, forecasts, "
-        "and product performance. Python calculates every displayed statistic. "
-        "Claude features remain optional and operator-controlled."
+        "market segments, and locally trained AI models. Python calculates every "
+        "displayed result; Claude tools remain optional and operator-controlled."
     )
 
     uploaded_file = st.file_uploader(
         "Upload a sales CSV",
         type=["csv"],
         help=(
-            "The file must contain the required InsightIQ sales columns and use "
+            "The file must contain the required DeskSignal sales columns and use "
             "YYYY-MM-DD dates. Maximum file size: 10 MB."
         ),
         max_upload_size=MAX_UPLOAD_SIZE_MB,

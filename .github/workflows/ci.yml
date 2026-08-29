@@ -35,7 +35,7 @@ jobs:
         run: python -m pip check
 
       - name: Compile Python modules
-        run: python -m compileall -q streamlit_app.py insightiq scripts tests
+        run: python -m compileall -q streamlit_app.py desksignal scripts tests
 
       - name: Run tests
         run: python -m pytest

@@ -7,13 +7,13 @@ from datetime import date
 import pandas as pd
 import pytest
 
-from insightiq.analytics.query_tools import (
+from desksignal.analytics.query_tools import (
     apply_analysis_filters,
     compare_periods,
     dimension_performance,
     get_time_series,
 )
-from insightiq.data.validation import validate_sales_data
+from desksignal.data.validation import validate_sales_data
 
 
 def test_exact_filters_never_evaluate_uploaded_text(
