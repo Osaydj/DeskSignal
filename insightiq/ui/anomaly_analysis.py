@@ -90,10 +90,12 @@ def render_anomaly_analysis(data: pd.DataFrame) -> None:
     summary_columns[0].metric(
         "Revenue anomalies",
         f"{int(revenue_results['is_anomaly'].sum()):,}",
+        border=True,
     )
     summary_columns[1].metric(
         "Profit anomalies",
         f"{int(profit_results['is_anomaly'].sum()):,}",
+        border=True,
     )
 
     revenue_tab, profit_tab = st.tabs(["Revenue", "Profit"])

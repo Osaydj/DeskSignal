@@ -9,18 +9,13 @@ from insightiq.analytics.forecasting import (
     DailyForecast,
     create_daily_forecast,
 )
+from insightiq.ui.downloads import dataframe_to_safe_csv
+from insightiq.ui.formatting import format_currency
 from insightiq.visualization.forecasting import daily_forecast_figure
 
 
 FORECAST_HORIZONS = (7, 14, 30, 60, 90)
 LOOKBACK_WINDOWS = (30, 60, 90, 180, 365)
-
-
-def _format_currency(value: float) -> str:
-    """Format a number as U.S. currency."""
-
-    sign = "-" if value < 0 else ""
-    return f"{sign}${abs(value):,.2f}"
 
 
 def _trend_percentage(result: DailyForecast) -> float:
@@ -62,16 +57,19 @@ def _render_forecast_metric(
 
     summary_columns[0].metric(
         f"{horizon_days}-day forecast total",
-        _format_currency(forecast_total),
+        format_currency(forecast_total),
+        border=True,
     )
     summary_columns[1].metric(
         "Forecast daily average",
-        _format_currency(forecast_average),
+        format_currency(forecast_average),
+        border=True,
     )
     summary_columns[2].metric(
         "Estimated daily trend",
-        _format_currency(result.slope_per_day),
+        format_currency(result.slope_per_day),
         delta=f"{trend_percentage:+.2f}% of recent daily average",
+        border=True,
     )
 
     st.plotly_chart(
@@ -116,12 +114,13 @@ def _render_forecast_metric(
 
         st.download_button(
             label=f"Download {metric} forecast CSV",
-            data=result.forecast.to_csv(index=False).encode("utf-8"),
+            data=dataframe_to_safe_csv(result.forecast),
             file_name=(
                 f"{metric}_{horizon_days}_day_forecast.csv"
             ),
             mime="text/csv",
             key=f"download_{metric}_forecast",
+            icon=":material/download:",
         )
 
 
@@ -162,6 +161,7 @@ def render_forecasting(data: pd.DataFrame) -> None:
                 ),
             )
         )
+
     if horizon_days > lookback_days:
         st.warning(
             "The forecast horizon is longer than the historical lookback. "

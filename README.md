@@ -32,7 +32,8 @@ Version 2 is currently being developed and tested on the `version-2` branch. The
 - Day-of-week patterns, recent linear trends, and statistical uncertainty ranges
 - Warnings when the forecast horizon exceeds the historical lookback
 - Forecast tables and CSV downloads
-- 79 automated tests
+- Spreadsheet-safe CSV downloads that neutralize formula-like text cells
+- 81 automated tests
 
 The anomaly detection and forecasting features are calculated entirely with Python. They do not use an AI model or make an external API request.
 

@@ -11,9 +11,10 @@ from dotenv import load_dotenv
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(PROJECT_ROOT / ".env", override=False)
 
-APP_TITLE = "InsightIQ — AI Business Analytics Assistant"
+APP_TITLE = "InsightIQ"
+APP_TAGLINE = "AI Business Analytics Assistant"
 APP_ICON = "📊"
-APP_PHASE = "Version 1 — Grounded Analytics, RAG, and Decision Support"
+APP_PHASE = "Version 2 Preview"
 CURRENCY_SYMBOL = "$"
 
 
