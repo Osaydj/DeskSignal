@@ -18,6 +18,7 @@ from insightiq.analytics.performance import (
 )
 from insightiq.config import ai_features_enabled
 from insightiq.ui.anomaly_analysis import render_anomaly_analysis
+from insightiq.ui.forecasting import render_forecasting
 from insightiq.ui.ask_data import render_ask_your_data
 from insightiq.ui.executive_summary import render_ai_executive_summary
 from insightiq.ui.recommendations import render_ai_recommendations
@@ -213,6 +214,7 @@ def render_dashboard(data: pd.DataFrame) -> None:
         overview_tab,
         trends_tab,
         anomalies_tab,
+        forecasting_tab,
         performance_tab,
         data_tab,
         ai_tab,
@@ -221,6 +223,7 @@ def render_dashboard(data: pd.DataFrame) -> None:
             "Overview",
             "Trends",
             "Anomalies",
+            "Forecasting",
             "Products & Markets",
             "Data Explorer",
             "AI Insights",
@@ -254,6 +257,10 @@ def render_dashboard(data: pd.DataFrame) -> None:
     with anomalies_tab:
             render_anomaly_analysis(filtered_data)
 
+
+    with forecasting_tab:
+        render_forecasting(filtered_data)
+        
     with performance_tab:
         st.subheader("Products and markets")
         st.caption(

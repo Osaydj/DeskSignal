@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 from insightiq.analytics.forecasting import create_daily_forecast
-
+from insightiq.visualization.forecasting import daily_forecast_figure
 
 def _sample_history(days: int = 120) -> pd.DataFrame:
     """Create predictable fictional daily results for testing."""
@@ -148,3 +148,23 @@ def test_insufficient_history_is_rejected() -> None:
         match="at least 28 calendar days",
     ):
         create_daily_forecast(data)
+
+
+def test_forecast_chart_contains_history_bounds_and_forecast() -> None:
+    result = create_daily_forecast(
+        _sample_history(),
+        metric="revenue",
+        horizon_days=30,
+    )
+
+    figure = daily_forecast_figure(result)
+
+    assert len(figure.data) == 4
+    assert [trace.name for trace in figure.data] == [
+        "Actual revenue",
+        "Upper bound",
+        "95% uncertainty range",
+        "Forecast revenue",
+    ]
+    assert len(figure.layout.shapes) == 1
+    assert figure.layout.title.text == "30-day revenue forecast"
