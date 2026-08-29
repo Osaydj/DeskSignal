@@ -15,11 +15,11 @@ explicitly enabled by the person operating the application.
 [Launch the InsightIQ analytics dashboard](https://insightiq-business-analytics.streamlit.app)
 
 The public demo runs in analytics-only mode using fictional sales data. AI features are disabled, and no API key is required.
-## Version 2 — In Development
+## Version 2 — Released
 
-Version 2 is currently being developed and tested on the `version-2` branch. The public demo remains on Version 1 until Version 2 is complete and approved for deployment.
+Version 2 is complete, tested, and deployed from the `main` branch. The public demo now runs Version 2 in analytics-only mode. AI features remain disabled by default and require explicit operator configuration.
 
-### New Features
+### Version 2 Features
 
 - Seven-section dashboard navigation: Overview, Trends, Anomalies, Forecasting, Products & Markets, Data Explorer, and AI Insights
 - Deterministic daily revenue and profit anomaly detection
