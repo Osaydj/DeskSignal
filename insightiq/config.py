@@ -14,7 +14,7 @@ load_dotenv(PROJECT_ROOT / ".env", override=False)
 APP_TITLE = "InsightIQ"
 APP_TAGLINE = "AI Business Analytics Assistant"
 APP_ICON = "📊"
-APP_PHASE = "Version 2 Preview"
+APP_PHASE = "Version 2"
 CURRENCY_SYMBOL = "$"
 
 
