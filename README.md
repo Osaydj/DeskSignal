@@ -1,6 +1,13 @@
 # DeskSignal — AI Business Analytics Assistant
 
-DeskSignal is a portfolio and educational business analytics application built
+[![CI](https://github.com/Osaydj/DeskSignal/actions/workflows/ci.yml/badge.svg)](https://github.com/Osaydj/DeskSignal/actions/workflows/ci.yml)
+![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
+![Streamlit](https://img.shields.io/badge/built%20with-Streamlit-FF4B4B)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+**Try it now:** [desksignal-business-analytics.streamlit.app](https://desksignal-business-analytics.streamlit.app) → click **Try it with sample data**.
+
+DeskSignal is an open-source, educational business analytics application built
 with Python, Streamlit, Pandas, Plotly, scikit-learn, and the Anthropic Python
 SDK. Python calculates every result. Local machine-learning models find unusual
 days, group product-market segments, and forecast sales without an API key.
@@ -11,12 +18,33 @@ The repository runs in **local analytics and ML mode by default**. CSV
 validation, filters, KPIs, charts, grouped tables, downloads, and local model
 training make no external AI request. Claude tools remain in the codebase but
 must be explicitly enabled by the person operating the application.
+
 ## Live Demo
 
 [Launch the DeskSignal analytics dashboard](https://desksignal-business-analytics.streamlit.app)
 
-The public demo uses fictional sales data. Its local ML tools require no API key;
+The public demo uses fictional sales data. Click **Try it with sample data** to load
+the full dashboard in one step, or upload your own CSV in the format described under
+[Required CSV Columns](#required-csv-columns). Its local ML tools require no API key;
 optional Claude tools remain unconfigured.
+
+The demo is hosted on Streamlit Community Cloud, which puts idle apps to sleep. If you
+see a "This app has gone to sleep" page, click the wake-up button and wait about 30
+seconds.
+
+## Quick Start
+
+```bash
+git clone https://github.com/Osaydj/DeskSignal.git
+cd DeskSignal
+python3.12 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m streamlit run streamlit_app.py
+```
+
+Open http://localhost:8501 and click **Try it with sample data**. No API key or
+account is needed. Detailed Windows, macOS, and Linux steps are below.
 
 ## Version 3 — Local AI
 
@@ -40,7 +68,7 @@ guaranteed outcomes.
 
 ## Version 2 — Released
 
-Version 2 is complete, tested, and deployed from the `main` branch. The public demo now runs Version 2 in analytics-only mode. AI features remain disabled by default and require explicit operator configuration.
+Version 2 is complete and tested. Its features are included in the current release. AI features remain disabled by default and require explicit operator configuration.
 
 ### Version 2 Features
 
@@ -438,13 +466,12 @@ This mode displays the complete deterministic dashboard and all three local ML
 tools, plus a clear notice that the optional Claude tools are not configured. It
 does not require an Anthropic account and cannot spend API credits.
 
-
 ## Author
 
 Created by [Osayd Jahanzeb](https://github.com/Osaydj).
 
-## Copyright
+## License
 
-Copyright © 2026 Osayd Jahanzeb. All rights reserved.
-
-This source code is provided for portfolio review only. No license is granted to copy, modify, redistribute, sublicense, or sell this software.
+DeskSignal is open source under the [MIT License](LICENSE). Copyright © 2026
+Osayd Jahanzeb. You are free to use, modify, and share it as long as the license
+notice is kept.
