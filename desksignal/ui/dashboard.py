@@ -23,7 +23,7 @@ from desksignal.ui.ask_data import render_ask_your_data
 from desksignal.ui.downloads import dataframe_to_safe_csv
 from desksignal.ui.executive_summary import render_ai_executive_summary
 from desksignal.ui.forecasting import render_forecasting
-from desksignal.ui.formatting import format_currency
+from desksignal.ui.formatting import format_compact_currency, format_currency
 from desksignal.ui.recommendations import render_ai_recommendations
 from desksignal.visualization.charts import (
     profit_by_region_figure,
@@ -163,12 +163,14 @@ def render_kpis(kpis: BusinessKPIs) -> None:
     first_row = st.columns(4)
     first_row[0].metric(
         "Total revenue",
-        format_currency(kpis.total_revenue),
+        format_compact_currency(kpis.total_revenue),
+        help=f"Exact: {format_currency(kpis.total_revenue)}",
         border=True,
     )
     first_row[1].metric(
         "Total profit",
-        format_currency(kpis.total_profit),
+        format_compact_currency(kpis.total_profit),
+        help=f"Exact: {format_currency(kpis.total_profit)}",
         border=True,
     )
     first_row[2].metric(
@@ -196,15 +198,23 @@ def render_kpis(kpis: BusinessKPIs) -> None:
     second_row[2].metric(
         "Best product",
         kpis.best_product,
-        delta=f"{format_currency(kpis.best_product_revenue)} revenue",
+        delta=f"{format_compact_currency(kpis.best_product_revenue)} revenue",
         delta_color="off",
+        help=(
+            f"{kpis.best_product}: "
+            f"{format_currency(kpis.best_product_revenue)} revenue"
+        ),
         border=True,
     )
     second_row[3].metric(
         "Best region",
         kpis.best_region,
-        delta=f"{format_currency(kpis.best_region_revenue)} revenue",
+        delta=f"{format_compact_currency(kpis.best_region_revenue)} revenue",
         delta_color="off",
+        help=(
+            f"{kpis.best_region}: "
+            f"{format_currency(kpis.best_region_revenue)} revenue"
+        ),
         border=True,
     )
 
