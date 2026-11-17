@@ -98,3 +98,20 @@ def test_server_side_upload_limit_is_enforced(
 
     with pytest.raises(DataValidationError, match="1 MB"):
         streamlit_app.validate_upload_size(4)
+
+
+def test_sample_data_button_renders_dashboard() -> None:
+    app_path = Path(__file__).parents[1] / "streamlit_app.py"
+    app = AppTest.from_file(app_path, default_timeout=20).run()
+
+    sample_button = next(
+        button for button in app.button if button.label == "Try it with sample data"
+    )
+    sample_button.click().run(timeout=20)
+
+    assert len(app.exception) == 0
+    assert any("fictional sample data" in message.value for message in app.success)
+    assert any(
+        button.label == "Download filtered CSV"
+        for button in app.get("download_button")
+    )
