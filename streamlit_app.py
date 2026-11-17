@@ -25,6 +25,7 @@ LOGGER = logging.getLogger(__name__)
 SAMPLE_DATA_PATH = Path(__file__).parent / "sample_data" / "sample_sales_data.csv"
 MAX_UPLOAD_SIZE_MB = 10
 MAX_UPLOAD_BYTES = MAX_UPLOAD_SIZE_MB * 1024 * 1024
+USE_SAMPLE_DATA_KEY = "use_sample_data"
 
 
 def validate_upload_size(file_size: int) -> None:
@@ -75,7 +76,7 @@ def main() -> None:
     )
 
     st.title(APP_TITLE)
-    st.caption(f"{APP_TAGLINE} · © 2026 Osayd Jahanzeb. All rights reserved.")
+    st.caption(f"{APP_TAGLINE} · © 2026 Osayd Jahanzeb · MIT License")
 
     with st.container(horizontal=True, gap="small"):
         st.badge(
@@ -116,13 +117,33 @@ def main() -> None:
         max_upload_size=MAX_UPLOAD_SIZE_MB,
     )
 
-    if uploaded_file is None:
-        st.info("Upload a CSV to begin. You can use the fictional sample below.")
-        render_sample_download()
+    sample_available = SAMPLE_DATA_PATH.exists()
+
+    if uploaded_file is not None:
+        st.session_state[USE_SAMPLE_DATA_KEY] = False
+        file_bytes = uploaded_file.getvalue()
+        using_sample = False
+    elif sample_available and st.session_state.get(USE_SAMPLE_DATA_KEY, False):
+        file_bytes = SAMPLE_DATA_PATH.read_bytes()
+        using_sample = True
+    else:
+        st.info(
+            "Upload a CSV to begin, or explore the dashboard instantly with the "
+            "fictional sample data."
+        )
+        with st.container(horizontal=True, gap="small"):
+            if sample_available and st.button(
+                "Try it with sample data",
+                type="primary",
+                icon=":material/play_arrow:",
+            ):
+                st.session_state[USE_SAMPLE_DATA_KEY] = True
+                st.rerun()
+            render_sample_download()
         return
 
     try:
-        sales_data = load_uploaded_data(uploaded_file.getvalue())
+        sales_data = load_uploaded_data(file_bytes)
     except DataValidationError as exc:
         st.error("The CSV could not be processed. Please fix these issues:")
         for message in exc.messages:
@@ -136,7 +157,13 @@ def main() -> None:
         )
         return
 
-    st.success(f"Validated {len(sales_data):,} sales rows successfully.")
+    if using_sample:
+        st.success(
+            f"Showing {len(sales_data):,} rows of fictional sample data. "
+            "Upload your own CSV above to replace it."
+        )
+    else:
+        st.success(f"Validated {len(sales_data):,} sales rows successfully.")
     render_dashboard(sales_data)
 
 
